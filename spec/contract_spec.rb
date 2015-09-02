@@ -8,6 +8,10 @@ describe "Contract" do
     methods :find_by_id
   end
 
+  it "does not provide a new method (use implemented_by instead)" do
+    expect { UsersRepo.new("anything") }.to raise_error(NoMethodError)
+  end
+
   it "generates constructor with one param" do
     expect{ UsersRepo.implemented_by }.to raise_error ArgumentError
     expect{ UsersRepo.implemented_by "bla", "ble" }.to raise_error ArgumentError
@@ -54,9 +58,4 @@ describe "Contract" do
       Contract::NotAllMethodsImplemented, "Not implemented [:find_by_another_thing]"
     )
   end
-
-  it "does not provide a new method (use implemented_by instead)" do
-    expect { UsersRepo.new("anything") }.to raise_error(NoMethodError)
-  end
-
 end
