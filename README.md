@@ -19,7 +19,7 @@ end
 # the Library repository contract.
 class InMemoryLibrary
   def initialize
-    @books = {'isbn1' => { name: "The Martian", isbn: "isbn1" }}
+    @books = {'1449394701' => { title: "Clojure Programming", isbn: "1449394701" }}
   end
 
   def find_by_isbn isbn
