@@ -32,7 +32,7 @@ class InMemoryLibrary
 end
 
 library = Library.implemented_by(InMemoryLibrary.new)
-=> true
+# => true
 
 # Whereas this other adapter is wrong because it does not implement :all.
 class WrongLibraryImplementation
@@ -42,7 +42,7 @@ class WrongLibraryImplementation
 end
 
 library = Library.implemented_by(WrongLibraryImplementation.new)
-=> Contract::NotAllMethodsImplemented: Not implemented [:all]
+# => Contract::NotAllMethodsImplemented: Not implemented [:all]
 
 # In this case we use a Mongoid based repository adapter.
 # Notice that it doesn't fail because :all is already provided by Mongoid::Document.
@@ -58,5 +58,5 @@ end
 
 # We pass the class because this adapter uses class methods.
 library = Library.implemented_by(MongoidLibrary)
-=> true
+# => true
 ```
