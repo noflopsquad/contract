@@ -2,8 +2,8 @@ Gem::Specification.new do |s|
   s.name        = 'contract'
   s.version     = '0.1.0'
   s.date        = '2015-09-01'
-  s.summary     = "Just a duck type contract"
-  s.description = "A simple module providing a way to define duck type contracts."
+  s.summary     = "Make ports and adapters constracts explicit."
+  s.description = "Provides a handy way to make explicit the contract between a port and its adapters."
   s.authors     = ["No Flop Squad"]
   s.email       = 'noflopsquad@gmail.com'
   s.files       = ["lib/contract.rb"]
