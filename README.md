@@ -11,37 +11,50 @@ require 'contract'
 
 class UsersRepo
   extend Contract
-  methods :find_by_email, :delete # these are the methods
-                                  # that any adapter of this port
-                                  # must implement
+  # These are the methods that any adapter of this port must implement
+  methods :find_by_email, :delete
 end
 
-class MongoidUsersRepo
-  include Mongoid::Document
-
-  field :email, type: String
+# For instance, this adapter is fine because it respects UsersRepo contract
+class InMemoryUsersRepo
+  def initialize
+    @users = {}
+  end
 
   def find_by_email email
-    find_by(email: email)
+    @users[email]
   end
 
-  def delete id
-    find(id).destroy
+  def delete email
+    @users.delete(email)
   end
 end
 
-# this adapter is fine because it respects UsersRepo contract
-users_repo = UsersRepo.implemented_by(MongoidUsersRepo)
+users_repo = UsersRepo.implemented_by(InMemoryUsersRepo.new)
 => true
 
+# Whereas this other adapter is wrong because it does not implement delete
 class WrongUsersRepoImplementation
   def find_by_email email
     # anything
   end
 end
 
-# this adapter is wrong because it does not implement delete
-users_repo = UsersRepo.implemented_by(WrongUsersRepoImplementation)
+users_repo = UsersRepo.implemented_by(WrongUsersRepoImplementation.new)
 => Contract::NotAllMethodsImplemented: Not implemented [:delete]
 
+# Using a Mongoid repository adapter that uses singleton methods.
+# Notice that it doesn't fail because delete is provided by Mongoid::Document.
+class MongoidUsersRepo
+  include Mongoid::Document
+
+  field :email, type: String
+
+  def self.find_by_email email
+    find_by(email: email)
+  end
+end
+
+users_repo = UsersRepo.implemented_by(MongoidUsersRepo) # We are passing the class
+=> true
 ```
