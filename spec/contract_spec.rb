@@ -38,11 +38,21 @@ describe "Contract" do
   end
 
   it "raises error if impl does not contain all repo methods" do
-    class UsersRepoImpl
-      def find_by_another_thing
+    class TaskRepo
+      extend Contract
+      methods :find_by_id, :find_by_another_thing
+    end
+
+    class TaskRepoImpl
+      def find_by_id
       end
     end
-    expect{ UsersRepo.new(UsersRepoImpl.new) }.to raise_error Contract::NotAllMethodsImplemented
+
+    expect do
+      TaskRepo.new(TaskRepoImpl.new)
+    end.to raise_error(
+      Contract::NotAllMethodsImplemented, "Not implemented [:find_by_another_thing]"
+    )
   end
 
 end

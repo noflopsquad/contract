@@ -15,10 +15,10 @@ module Contract
     end
 
     define_method(:check_all_methods_implemented) do |impl|
-      all_implemented = method_names.map do |method_name|
-        impl.respond_to?(method_name)
-      end.all?
-      raise NotAllMethodsImplemented unless all_implemented
+      not_implemented = method_names.select do |method_name|
+        not impl.respond_to?(method_name)
+      end
+      raise NotAllMethodsImplemented.new(not_implemented) unless not_implemented.empty?
     end
 
     define_method(:initialize) do |impl|
@@ -29,7 +29,9 @@ module Contract
   end
 
   class NotAllMethodsImplemented < Exception
+    def initialize not_implemented_methods
+      super("Not implemented #{not_implemented_methods.to_s}")
+    end
   end
 
 end
-
