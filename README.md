@@ -15,7 +15,8 @@ class Library
   methods :find_by_isbn, :all
 end
 
-# For instance, this adapter is fine because it respects the Library repository contract.
+# For instance, this adapter is fine because it respects
+# the Library repository contract.
 class InMemoryLibrary
   def initialize
     @books = {'isbn1' => { name: "The Martian", isbn: "isbn1" }}
