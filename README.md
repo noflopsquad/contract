@@ -9,53 +9,53 @@ Provides a handy way to make explicit the contract between a port and its adapte
 ```ruby
 require 'contract'
 
-class UsersRepo
+class Library
   extend Contract
   # These are the methods that any adapter of this port must implement.
-  methods :find_by_email, :all
+  methods :find_by_isbn, :all
 end
 
-# For instance, this adapter is fine because it respects UsersRepo contract.
-class InMemoryUsersRepo
+# For instance, this adapter is fine because it respects the Library repository contract.
+class InMemoryLibrary
   def initialize
-    @users = {'email1' => { name: "Koko", email: "email1" }}
+    @books = {'isbn1' => { name: "The Martian", isbn: "isbn1" }}
   end
 
-  def find_by_email email
-    @users[email]
+  def find_by_isbn isbn
+    @books[isbn]
   end
 
   def all
-    @users.values
+    @books.values
   end
 end
 
-users_repo = UsersRepo.implemented_by(InMemoryUsersRepo.new)
+library = Library.implemented_by(InMemoryLibrary.new)
 => true
 
 # Whereas this other adapter is wrong because it does not implement :all.
-class WrongUsersRepoImplementation
-  def find_by_email email
+class WrongLibraryImplementation
+  def find_by_isbn isbn
     # anything
   end
 end
 
-users_repo = UsersRepo.implemented_by(WrongUsersRepoImplementation.new)
+library = Library.implemented_by(WrongLibraryImplementation.new)
 => Contract::NotAllMethodsImplemented: Not implemented [:all]
 
 # In this case we use a Mongoid based repository adapter.
 # Notice that it doesn't fail because :all is already provided by Mongoid::Document.
-class MongoidUsersRepo
+class MongoidLibrary
   include Mongoid::Document
 
-  field :email, type: String
+  field :isbn, type: String
 
-  def self.find_by_email email
-    find_by(email: email)
+  def self.find_by_isbn isbn
+    find_by(isbn: isbn)
   end
 end
 
 # We pass the class because this adapter uses class methods.
-users_repo = UsersRepo.implemented_by(MongoidUsersRepo)
+library = Library.implemented_by(MongoidLibrary)
 => true
 ```
