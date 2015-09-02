@@ -26,6 +26,13 @@ module Contract
       instance_variable_set(:"@impl", impl)
       delegate_to_impl method_names
     end
+
+    define_singleton_method(:implemented_by) do |impl|
+      new(impl)
+    end
+
+    private_class_method :new
+
   end
 
   class NotAllMethodsImplemented < Exception
